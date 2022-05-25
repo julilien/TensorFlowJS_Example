@@ -22,18 +22,18 @@ import $ from 'jquery'
 
 import {MnistData} from './mnist_data'
 import * as util from './mnist_utils'
-import {initCanvas} from './draw_utils'
+// import {initCanvas} from './draw_utils'
 require('babel-polyfill')
 
 
 let data = new MnistData()
 $('#load-data-btn').click(async() => {
     let msg = $('#loading-data')
-    msg.text('Downloading MNIST data. Please wait...')
+    msg.text('MNIST wird heruntergeladen. Bitte warten...')
     await data.load(40000, 10000)
     
     msg.toggleClass('badge-warning badge-success')    
-    msg.text('MNIST data Loaded')
+    msg.text('MNIST wurde erfolgreich geladen.')
     $('#load-btn').prop('disabled', true)
     
     const [x_test, y_test] = data.getTestData(8)
@@ -62,7 +62,7 @@ let round = (num) => parseFloat(num*100).toFixed(1)
 $('#train-btn').click(async() => {        
     var msg = $('#training')
     msg.toggleClass('badge-warning badge-success')    
-    msg.text('Training, please wait...')    
+    msg.text('Trainiert, bitte warten...')    
     
     const trainLogs = []
     const loss = $('#loss-graph')[0]
@@ -73,7 +73,7 @@ $('#train-btn').click(async() => {
     const [x_train, y_train] = data.getTrainData()
     let nIter = 0
     const numIter = Math.ceil(x_train.shape[0] / batch) * epoch    
-    $('#num-iter').text('Num Training Iteration: '+ numIter)
+    $('#num-iter').text('Nummer der Trainingsiterationen: '+ numIter)
 
     const history = await model.fit(x_train, y_train, {
         epochs: epoch,
@@ -85,25 +85,25 @@ $('#train-btn').click(async() => {
                 trainLogs.push(logs)
                 tfvis.show.history(loss, trainLogs, ['loss'], { width: 300, height: 160 })
                 tfvis.show.history(acc, trainLogs, ['acc'], { width: 300, height: 160 })
-                $('#train-iter').text(`Training..( ${round(nIter / numIter)}% )`)
-                $('#train-acc').text('Training Accuracy : '+ round(logs.acc) +'%')
+                $('#train-iter').text(`Training... ( ${round(nIter / numIter)}% )`)
+                $('#train-acc').text('Trainingsgenauigkeit (accuracy): '+ round(logs.acc) +'%')
             },
         }
     })
     
     $('#train-iter').toggleClass('badge-warning badge-success')    
     msg.toggleClass('badge-warning badge-success')    
-    msg.text('Training Done')
+    msg.text('Training abgeschlossen.')
     $('#save-btn').prop('disabled', false)        
 })
     
 $('#eval-btn').click(async() => {        
-    const classNames = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
+    const classNames = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     let [x_test, y_test] = data.getTestData()
     let y_pred = model.predict(x_test).argMax(1)
     let y_label = y_test.argMax(1)
     let eval_test = await tfvis.metrics.accuracy(y_label, y_pred)
-    $('#test-acc').text( 'Testset Accuracy : '+ round(eval_test)+'%')
+    $('#test-acc').text( 'Testdatensatz Accuracy: '+ round(eval_test)+'%')
     const classaAcc = await tfvis.metrics.perClassAccuracy(y_label,y_pred)
     const confMt = await tfvis.metrics.confusionMatrix(y_label, y_pred)
     const conf = $('#confusion-matrix')[0]
@@ -134,6 +134,7 @@ $('#save-btn').click(async() => {
 })
 
 $('#load-model-btn').click(async() => {    
+    console.log($('#loaded'))
     $('#loaded').show()
     const jsonUpload = $('#json-upload')[0]
     const weightsUpload = $('#weights-upload')[0]
@@ -148,27 +149,38 @@ $('#load-model-btn').click(async() => {
     }
 })
 
-initCanvas('predict-canvas')
-$('#clear-btn').click(function(){
-    var canvas = $('#predict-canvas')[0]
-    var context = canvas.getContext('2d')
-    context.clearRect(0, 0, canvas.width, canvas.height)
-})
+// initCanvas('predict-canvas')
+//$('#clear-btn').click(function(){
+//    var canvas = $('#predict-canvas')[0]
+//    var context = canvas.getContext('2d')
+//    context.clearRect(0, 0, canvas.width, canvas.height)
+//})
 
 $('#predict-btn').click(async() => {
-    var canvas = $('#predict-canvas')[0]
-    var preview = $('#preview-canvas')[0]
+    // // var canvas = $('#predict-canvas')[0]
+    // // var preview = $('#preview-canvas')[0]
+    // var canvas = $('#predict-canvas')
+    // var preview = $('#preview-canvas')
     
-    var img = tf.browser.fromPixels(canvas, 4)
-    var resized = util.cropImage(img, canvas.width)        
+    // // var img = tf.browser.fromPixels(canvas, 4)
+    // var img = tf.browser.fromPixels(canvas)
+    // console.log(img)
+    // var resized = util.cropImage(img, canvas.width)        
+    // console.log(resized)
+
+    var tensor = tf.browser.fromPixels(document.querySelector("#predict-canvas"));
+    tensor = tf.image.resizeBilinear(tensor, [28, 28]);
+    tensor = tensor.mean(2).div(255).toFloat().expandDims(-1);
+    tf.browser.toPixels(tensor, document.querySelector("#preview-canvas"));
     
-    tf.browser.toPixels(resized, preview)    
-    var x_data = tf.cast(resized.reshape([1, 28, 28, 1]), 'float32')
+    // tf.browser.toPixels(resized, preview)    
+    var x_data = tensor // tf.cast(resized.reshape([1, 28, 28, 1]), 'float32')
     
-    var y_pred = model.predict(x_data)
+    // var y_pred = model.predict(x_data)
+    var y_pred = model.predict(tensor.expandDims(0))
     
     var prediction = Array.from(y_pred.argMax(1).dataSync())    
-    $('#prediction').text( 'Predicted: '+ prediction)    
+    $('#prediction').text( 'Modellausgabe: '+ prediction)    
     
     const barchartData = Array.from(y_pred.dataSync()).map((d, i) => {
         return { index: i, value: d }

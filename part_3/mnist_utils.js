@@ -55,7 +55,7 @@ export function showExample(elementId, data, labels, predictions=null ){
 
         const label = labels[i]
         if(predictions == null){
-            pred.innerText = `label: ${label}`
+            pred.innerText = `Klasse: ${label}`
         }else{
             const prediction = predictions[i]
             const correct = prediction === label

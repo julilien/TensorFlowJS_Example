@@ -21,37 +21,35 @@
         <div class="container">
             <div class="card-body">
                 <h1>
-                    MNIST Classifier using TensorFlow.js
-                    <img src="http://icm.rg.telkomuniversity.ac.id/img/ailab_logo.png"
-                         class="navbar-ai" />
+                    Bildklassifikation mit maschinellem Lernen
                 </h1>
             </div>
             
             <!-- Load Dataset -->
             <div class="card-body" >    
-                <h3>MNIST Dataset</h3>
-                <button type="button" class="btn btn-primary form-group" id="load-data-btn">Load Data</button>    
-                <h4><div id="loading-data" class="badge badge-warning"/></h4>
-                <h4>Test Data Example</h4>
+                <h3>Datensatz laden</h3>
+                <button type="button" class="btn btn-primary form-group" id="load-data-btn">Lade Daten</button>    
+                <h4><div id="loading-data"/></h4> <!-- class="badge badge-warning" -->
+                <h4>Testdatenbeispiel</h4>
                 <div id="mnist-preview"></div>
             </div><hr>
             
             <!-- Initialize Model -->
             <div class="card-body ">
-                <h3>Model Architecture</h3>
+                <h3>Modellarchitektur</h3>
                 <div class="form-group" >    
-                    <textarea class="form-control" rows="11" id="model">model = tf.sequential(); </textarea>
+                    <textarea class="form-control" rows="11" id="model" style="display:none;">model = tf.sequential(); </textarea>
                 </div>
                 <div class="row form-group" >    
                     <div class="col">
-                        <label class="radio-inline"><input type="radio" name="optmodel" value='ANN'> ANN</label>
+                        <label class="radio-inline"><input type="radio" name="optmodel" value='ANN'> MLP</label>
                         <label class="radio-inline"><input type="radio" name="optmodel" value='CNN'> CNN</label>
                     </div>
                     <div class="col">
-                        <button type="button" class="float-right btn btn-primary" id="init-btn">Initialize Model</button>    
+                        <button type="button" class="float-right btn btn-primary" id="init-btn">Initialisiere Modell</button>    
                     </div>
                 </div><hr>
-                <h3>Model Summary</h3>
+                <h3>Modellzusammenfassung</h3>
                 <div id="summary"></div>
             </div><hr>
                     
@@ -59,33 +57,33 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col border-right">    
-                        <h3>Train Model</h3>
+                        <h3>Modelltraining</h3>
                         <div class="form-group">
-                            <label>Max Epoch:</label>
+                            <label>Maximale Epochen:</label>
                             <input id='epoch' class="form-control"
                                 type="text" value="1">
-                            <label>Batch Size:</label>
+                            <label>Batchgr&ouml;&szlig;e:</label>
                             <input id='batch' class="form-control"
                                 type="text" value="100">
                         </div>            
                         <!--<div class="form-group">-->
-                            <button type="button" class="btn btn-primary" id="train-btn" disabled>Train Model</button>
+                            <button type="button" class="btn btn-primary" id="train-btn" disabled>Trainiere Modell</button>
                         <!--</div>            -->
                     </div>
                     <div class="col">
-                        <h3>Training Progress</h3>
+                        <h3>Trainingsfortschritt</h3>
                         <div id="loss-graph"></div>
-                        <div class="caption">Loss</div><hr>    
-                        <h4><div id="training" class="badge badge-success"/></h4>
-                        <h4><div id="num-iter" class="badge"/></h4>                
+                        <div class="caption">Verlustfunktion</div><hr>    
+                        <h4><div id="training"/></h4>
+                        <h4><div id="num-iter"/></h4>                
                     </div>
                     
                     <div class="col">    
                         <h3><br></h3>
                         <div id="acc-graph"></div>
-                        <div class="caption">Accuracy</div><hr>    
-                        <h4><div id="train-iter" class="badge badge-warning"/></h4>
-                        <h4><div id="train-acc" class="badge badge-info"/></h4>
+                        <div class="caption">Accuracy (% richtig klassifiziert)</div><hr>    
+                        <h4><div id="train-iter"/></h4>
+                        <h4><div id="train-acc"/></h4>
                     </div>
 
                 </div>
@@ -93,23 +91,23 @@
             
             <!-- Evaluate Model -->
             <div class="card-body">
-                <h3>Evaluate Model</h3>
+                <h3>Modellevaluation</h3>
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary" id="eval-btn" disabled>Evaluate Model</button>
+                    <button type="button" class="btn btn-primary" id="eval-btn" disabled>Evaluiere Modell</button>
                 </div>                    
                 <div class="row">
                     <div class="col">
-                        <h3>Class Accuracy</h3>
+                        <h3>Genauigkeit nach Klassen</h3>
                         <div class="form-group" id="class-accuracy"></div>    
-                        <h4><div id="test-acc" class="badge badge-success"/></h4>    
+                        <h4><div id="test-acc"/></h4>    
                     </div>
                     <div class="col">
-                        <h3>Confusion Matrix</h3>
+                        <h3>Konfusionsmatrix</h3>
                         <div class="form-group" id="confusion-matrix"></div>        
                     </div>
                 </div><hr>
-                <h3>Prediction Example</h3>
-                <button type="button" class="btn btn-primary" id="show-example-btn" disabled>Show Prediction</button>
+                <h3>Pr&auml;diktionsbeispiel</h3>
+                <button type="button" class="btn btn-primary" id="show-example-btn" disabled>Zeige Pr&auml;diktion</button>
                 <div id="example-preview"></div>
             </div><hr>
             
@@ -117,48 +115,49 @@
             <div class="card-body">            
                 <div class="row">
                     <div class="col border-right">
-                        <h3>Save Model</h3>
-                        <button type="button" class="btn btn-primary form-group" id="save-btn" >Save Model</button>
-                        <h4><div class="badge badge-success" id="saved" style="display:none;">Model Saved</div></h4>
+                        <h3>Modellsicherung</h3>
+                        <button type="button" class="btn btn-primary form-group" id="save-btn" >Modell speichern</button>
+                        <h4><div id="saved" style="display:none;">Modell gespeichert.</div></h4>
                     </div>
                     <div class="col">
-                        <h3>Load Model</h3>
+                        <h3>Modell laden</h3>
                         <label class="btn btn-primary btn-file">
-                            Browse JSON <input type="file" id="json-upload">
+                            Suche JSON <input type="file" id="json-upload">
                         </label>
                         <label class="btn btn-primary btn-file">
-                            Browse Weights <input type="file" id="weights-upload">
+                            Suche Gewichtsdatei <input type="file" id="weights-upload">
                         </label>
-                        <button type="button" class="btn btn-primary form-group" id="load-model-btn">Load Model</button>
-                        <h4><div class="badge badge-success" id="loaded" style="display:none;">Model Loaded</div></h4>
+                        <button type="button" class="btn btn-primary form-group" id="load-model-btn">Lade Modell</button>
+                        <h4><div id="loaded" style="display:none;">Modell geladen.</div></h4>
                     </div>
                 </div>
             </div><hr>
             
             <!-- Test Model -->
             <div class="card-body">
-                <h3>Draw New Image</h3>    
+                <h3>Zeichne eine Zahl</h3>    
                 <div class="row  form-group">
-                    <div class="col-2 offset-0 form-group">
-                        <canvas id="predict-canvas" width="140" height="140" style="border:1px solid #000000;" ></canvas>
+                    <div class="col-3 offset-0 form-group">
+                        <canvas id="predict-canvas" width="240" height="240" style="border:1px solid #000000;"></canvas> <!--style="border:1px solid #000000;"--> 
                     </div>
                     <div class="col-2" style="text-align:center">
                         <div class="form-group">
-                            preview <br><canvas id="preview-canvas" width="28" height="28" style="border:1px solid #000000;"></canvas>
+                            Vorschau <br><canvas id="preview-canvas" width="28" height="28" style="border:1px solid #000000;"></canvas>
                         </div>
-                        <h4><div class="badge badge-success" id="prediction"/></h4>
+                        <h4><div id="prediction"/></h4> <!-- class="badge badge-success" -->
                     </div>
-                    <div class="col-5">
-                        Prediction Class Histogram
+                    <div class="col">
+                        Pr&auml;dizierte Wahrscheinlichkeiten
                         <div id="predict-graph"></div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" id="clear-btn">Clear</button>
-                <button type="button" class="btn btn-primary" id="predict-btn" disabled>Predict</button>
+                <button type="button" class="btn btn-primary" id="clear-btn">L&ouml;schen</button>
+                <button type="button" class="btn btn-primary" id="predict-btn" disabled>Pr&auml;diziere</button>
             </div><hr>
             
         </div><br><br>
         <script src="./index.js"></script>
+        <script src="./canvas.js"></script>
     </body>
 </html>
 

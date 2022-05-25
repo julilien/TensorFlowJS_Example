@@ -36,6 +36,7 @@ export function initCanvas(id, size=8, color="#000000"){
     }
 
     function drawNew(context) {
+        console.log("drawNew")
         var i = clickX.length - 1
         if (!clickDrag[i]) {
             if (clickX.length == 0) {
@@ -53,6 +54,7 @@ export function initCanvas(id, size=8, color="#000000"){
             context.lineTo(clickX[i], clickY[i])
             context.stroke()
         }
+        console.log(clickX)
         context.stroke()
     }
 
@@ -87,7 +89,15 @@ export function initCanvas(id, size=8, color="#000000"){
             mouseDownEventHandler(detectEvent)
     }
 
-    canvas.addEventListener('mousedown', setUpHandler )
+    // canvas.addEventListener('mousedown', setUpHandler )
+    canvas.addEventListener('mousedown', mouseDownEventHandler)
+
+    canvas.addEventListener('mouseup', mouseUpEventHandler)
+    canvas.addEventListener('mousemove', mouseMoveEventHandler)
+    canvas.addEventListener('mousedown', mouseDownEventHandler)
+
+
+    console.log("Initialized canvas")
 }
 
 
