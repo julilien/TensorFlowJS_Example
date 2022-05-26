@@ -69,8 +69,21 @@ $('#train-btn').click(async() => {
     const acc = $('#acc-graph')[0]
     var epoch = parseInt($('#epoch').val())
     var batch = parseInt($('#batch').val())
+    var n_instances = parseInt($('#instances').val())
     
-    const [x_train, y_train] = data.getTrainData()
+    const [x_train2, y_train2] = data.getTrainData()
+
+    // console.log(n_instances)
+
+    if (n_instances > 40000) {
+        n_instances = 40000
+    }
+
+    const x_train = x_train2.slice(0, n_instances)
+    const y_train = y_train2.slice(0, n_instances)
+    //console.log(x_train)
+    //console.log(y_train)
+
     let nIter = 0
     const numIter = Math.ceil(x_train.shape[0] / batch) * epoch    
     $('#num-iter').text('Nummer der Trainingsiterationen: '+ numIter)
